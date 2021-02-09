@@ -1,8 +1,9 @@
-package com.example.pokemonapp
+package com.example.pokemonapp.data
 
 import androidx.paging.PageKeyedDataSource
 import com.example.pokemonapp.model.Pokemon
 import com.example.pokemonapp.network.PokemonWebservice
+import com.example.pokemonapp.toPokemon
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

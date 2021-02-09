@@ -1,8 +1,6 @@
-package com.example.pokemonapp
+package com.example.pokemonapp.data
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
@@ -11,10 +9,9 @@ import com.example.pokemonapp.model.Pokemon
 import com.example.pokemonapp.model.PokemonApi
 import com.example.pokemonapp.model.PokemonDetail
 import com.example.pokemonapp.network.PokemonWebservice
+import kotlinx.coroutines.CoroutineScope
 
-class MainViewModel(private val webservice: PokemonWebservice) : ViewModel() {
-    private val pokemonListLiveData = MutableLiveData<ArrayList<PokemonApi>>()
-    private val pokemonLiveData = MutableLiveData<PokemonDetail>()
+class Repository(private val webservice: PokemonWebservice, private val coroutineScope: CoroutineScope) {
     private val liveData : LiveData<PagedList<Pokemon>>
 
     init {
@@ -25,12 +22,11 @@ class MainViewModel(private val webservice: PokemonWebservice) : ViewModel() {
         liveData  = initializedPagedListBuilder(config).build()
     }
 
-    private fun initializedPagedListBuilder(config: PagedList.Config):
-            LivePagedListBuilder<Int, Pokemon> {
+    private fun initializedPagedListBuilder(config: PagedList.Config): LivePagedListBuilder<Int, Pokemon> {
 
         val dataSourceFactory = object : DataSource.Factory<Int, Pokemon>() {
             override fun create(): DataSource<Int, Pokemon> {
-                return PokemonListDataSource(webservice, viewModelScope)
+                return PokemonListDataSource(webservice, coroutineScope)
             }
         }
         return LivePagedListBuilder<Int, Pokemon>(dataSourceFactory, config)
@@ -39,12 +35,11 @@ class MainViewModel(private val webservice: PokemonWebservice) : ViewModel() {
     val pokemonList : LiveData<PagedList<Pokemon>>
         get() = liveData
 
-
-
-    /*fun fetchPokemonDetail(id: Int){
-        viewModelScope.launch {
-            val pokemon = repository.getPokemonDetail(id)
-            pokemonLiveData.value = pokemon
+    suspend fun getPokemonDetail(id : Int) : PokemonDetail? {
+        val response = webservice.getPokemonDetail(id)
+        if(response.isSuccessful){
+            return response.body()
         }
-    }*/
+        return null
+    }
 }

@@ -1,9 +1,10 @@
-package com.example.pokemonapp
+package com.example.pokemonapp.ui.viewModel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pokemonapp.data.Repository
 import com.example.pokemonapp.model.PokemonDetail
 import kotlinx.coroutines.launch
 
