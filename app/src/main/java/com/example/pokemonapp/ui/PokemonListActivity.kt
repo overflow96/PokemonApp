@@ -7,24 +7,28 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.pokemonapp.*
+import com.example.pokemonapp.data.PokemonListDataSourceFactory
 import com.example.pokemonapp.data.Repository
 import com.example.pokemonapp.network.PokemonWebservice
 import com.example.pokemonapp.ui.adapter.PokemonListAdapter
-import com.example.pokemonapp.ui.viewModel.ListViewModelFactory
-import com.example.pokemonapp.ui.viewModel.MainViewModel
+import com.example.pokemonapp.ui.viewModel.PokemonListViewModelFactory
+import com.example.pokemonapp.ui.viewModel.PokemonListViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var viewModel : MainViewModel
+class PokemonListActivity : AppCompatActivity() {
+    private lateinit var viewModel : PokemonListViewModel
     private val adapter = PokemonListAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val repository = Repository(PokemonWebservice(), lifecycleScope)
+        val webservice = PokemonWebservice()
+        val pokemonListDataSourceFactory = PokemonListDataSourceFactory(webservice, lifecycleScope)
 
-        viewModel = ViewModelProvider(this, ListViewModelFactory(repository)).get(MainViewModel::class.java)
+        val repository = Repository(webservice, pokemonListDataSourceFactory)
+
+        viewModel = ViewModelProvider(this, PokemonListViewModelFactory(repository)).get(PokemonListViewModel::class.java)
 
         viewModel.pokemonList.observe(this, Observer {
             adapter.submitList(it)

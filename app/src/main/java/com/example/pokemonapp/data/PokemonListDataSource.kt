@@ -20,10 +20,6 @@ class PokemonListDataSource(private val webservice: PokemonWebservice, private v
         }
     }
 
-    override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Pokemon>) {
-
-    }
-
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Pokemon>) {
         coroutineScope.launch {
             val pokemonResponse = webservice.getPokemonList((params.key -1) *10, 10)
@@ -36,4 +32,6 @@ class PokemonListDataSource(private val webservice: PokemonWebservice, private v
             }
         }
     }
+
+    override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Pokemon>) {}
 }

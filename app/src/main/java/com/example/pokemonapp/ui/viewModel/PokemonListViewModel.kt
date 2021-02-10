@@ -14,7 +14,7 @@ import com.example.pokemonapp.model.PokemonApi
 import com.example.pokemonapp.model.PokemonDetail
 import com.example.pokemonapp.network.PokemonWebservice
 
-class MainViewModel(private val repository: Repository) : ViewModel() {
+class PokemonListViewModel(private val repository: Repository) : ViewModel() {
     val pokemonList : LiveData<PagedList<Pokemon>>
         get() = repository.pokemonList
 }
